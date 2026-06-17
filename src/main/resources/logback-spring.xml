@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Logback 日志配置
+    输出位置：
+      - 控制台（开发时实时查看）
+      - logs/flower-store.log（按天滚动，保留 30 天）
+-->
+<configuration>
+    <!-- 控制台输出 -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <!-- 格式：时间 日志级别 线程 类名:行号 - 消息 -->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%highlight(%-5level)] [%thread] %cyan(%logger{36}:%line) - %msg%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!-- 文件输出 -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/flower-store.log</file>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] [%thread] %logger{36}:%line - %msg%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <!-- 按天滚动 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/flower-store.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>   <!-- 保留 30 天 -->
+        </rollingPolicy>
+    </appender>
+
+    <!-- 项目代码：DEBUG 级别 -->
+    <logger name="com.flowershop" level="DEBUG"/>
+
+    <!-- MyBatis SQL：DEBUG 级别可以看到 SQL 语句 -->
+    <logger name="com.flowershop.mapper" level="DEBUG"/>
+
+    <!-- 全局默认：INFO -->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE"/>
+    </root>
+</configuration>
